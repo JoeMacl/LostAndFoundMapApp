@@ -22,12 +22,24 @@ import android.widget.ImageView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.Priority;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
 public class AddItemActivity extends AppCompatActivity {
 
     Spinner spinnerCategory;
     EditText editName, editPhone, editDescription, editDate, editLocation;
     RadioGroup radioPostType;
     Button btnSave;
+
+    Button btnCurrentLocation;
 
     DatabaseHelper databaseHelper;
 
@@ -36,6 +48,9 @@ public class AddItemActivity extends AppCompatActivity {
     Button btnUploadImage;
     ImageView imagePreview;
     Uri selectedImageUri;
+
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +75,8 @@ public class AddItemActivity extends AppCompatActivity {
         editLocation = findViewById(R.id.editLocation);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSave = findViewById(R.id.btnSave);
+
+        btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
 
         btnUploadImage = findViewById(R.id.btnUploadImage);
         imagePreview = findViewById(R.id.imagePreview);
@@ -96,6 +113,39 @@ public class AddItemActivity extends AppCompatActivity {
         editDate.setText(currentDate);
 
         btnSave.setOnClickListener(v -> saveItem());
+
+        btnCurrentLocation.setOnClickListener(v -> {
+
+            FusedLocationProviderClient fusedLocationClient =
+                    LocationServices.getFusedLocationProviderClient(this);
+
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        100);
+                return;
+            }
+
+            fusedLocationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null
+            ).addOnSuccessListener(location -> {
+
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+
+                    editLocation.setText(latitude + ", " + longitude);
+
+                    Toast.makeText(this, "Location captured", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Location not available yet. Set emulator location and try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     @Override
@@ -153,7 +203,9 @@ public class AddItemActivity extends AppCompatActivity {
                 date,
                 location,
                 category,
-                imageUri
+                imageUri,
+                latitude,
+                longitude
         );
 
         if (success) {

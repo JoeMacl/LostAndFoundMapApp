@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import androidx.appcompat.widget.Toolbar;
 
 public class ItemDetailsActivity extends AppCompatActivity {
 
@@ -26,6 +27,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Item Details");
+        }
 
         databaseHelper = new DatabaseHelper(this);
 
@@ -77,5 +86,12 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Failed to remove advert", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+
     }
 }

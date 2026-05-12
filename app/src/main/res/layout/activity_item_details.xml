@@ -9,6 +9,13 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#6750A4"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
         <ImageView
             android:id="@+id/detailImage"
             android:layout_width="match_parent"
@@ -59,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Remove Advert" />
+
 
     </LinearLayout>
 </ScrollView>

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "lost_found.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_ITEMS = "items";
 
@@ -26,6 +26,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_LOCATION = "location";
     public static final String COL_CATEGORY = "category";
     public static final String COL_IMAGE_URI = "imageUri";
+
+    public static final String COL_LATITUDE = "latitude";
+    public static final String COL_LONGITUDE = "longitude";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -52,7 +55,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COL_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COL_LOCATION)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COL_CATEGORY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE_URI))
+                        cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE_URI)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE))
                 );
 
                 itemList.add(item);
@@ -75,7 +80,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_DATE + " TEXT, " +
                 COL_LOCATION + " TEXT, " +
                 COL_CATEGORY + " TEXT, " +
-                COL_IMAGE_URI + " TEXT" +
+                COL_IMAGE_URI + " TEXT," +
+                COL_LATITUDE + " REAL, " +
+                COL_LONGITUDE + " REAL" +
                 ")";
 
         db.execSQL(createTable);
@@ -95,7 +102,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                               String date,
                               String location,
                               String category,
-                              String imageUri) {
+                              String imageUri,
+                              double latitude,
+                              double longitude) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -109,6 +118,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_LOCATION, location);
         values.put(COL_CATEGORY, category);
         values.put(COL_IMAGE_URI, imageUri);
+        values.put(COL_LATITUDE, latitude);
+        values.put(COL_LONGITUDE, longitude);
 
         long result = db.insert(TABLE_ITEMS, null, values);
 
@@ -135,7 +146,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_DATE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_LOCATION)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_CATEGORY)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE_URI))
+                    cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE_URI)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE))
             );
         }
 
@@ -178,7 +191,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COL_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COL_LOCATION)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COL_CATEGORY)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE_URI))
+                        cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE_URI)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LATITUDE)),
+                        cursor.getDouble(cursor.getColumnIndexOrThrow(COL_LONGITUDE))
                 );
 
                 itemList.add(item);
